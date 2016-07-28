@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ConsoleApplication3.ElasticSearch;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,47 +13,42 @@ namespace ConsoleApplication3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Test md hashing");
-            using (MD5 md5Hash = MD5.Create())
-            {
-                byte[] bytes = new byte[10] { 123, 2, 100, 65, 252, 3, 4, 55, 67, 98 };
 
-                Console.WriteLine("original bytes");
-                StringBuilder builder = new StringBuilder();
-                for(int j = 0; j < bytes.Length; j++)
-                {
-                    Console.WriteLine(bytes[j]);
-                    builder.Append(bytes[j].ToString("x2"));
-                }
-
-                Console.WriteLine("string representation");
-                var converted = Encoding.ASCII.GetString(bytes);
-                Console.WriteLine(converted);
-                Console.WriteLine(builder.ToString());
-                Console.WriteLine("back to byte");
-
-                var reverted = Encoding.ASCII.GetBytes(converted);
-                for (int k = 0; k < reverted.Length; k++)
-                {
-                    Console.WriteLine(bytes[k]);
-                }
-
-                var result = md5Hash.ComputeHash(bytes);
-
-                Console.WriteLine("resulting bytes");
-
-                for(int i = 0; i < result.Length; i++)
-                {
-                    Console.WriteLine(result[i]);
-                }
-                Console.WriteLine("string representation");
-                Console.WriteLine(Encoding.ASCII.GetString(result));
-
-
-
-            }
+            var task = TestES();
+            task.Wait();
+            bool result = task.Result;
 
 
         }
+
+        public static async Task<bool> TestES()
+        {
+
+            ElasticSearchRepo client = new ElasticSearchRepo();
+
+            //client.DeleteIndexAsync("mherindex");
+
+            //client.CreateIndexAsync("mherindex", "mher").Wait();
+
+            //client.RemoveAlias("mher").Wait();
+
+            //client.AddItem("mherindex", new Symptom { Name = "Red Skin", Description = "Skin color is red" }).Wait();
+
+            //client.AddSymptoms("mherindex").Wait();
+
+            //var result = client.Query();
+
+            //var update = client.UpdateAsync("AVT0lr2GXfxqVSCeV7UR", "Red Eye");
+
+            var delete = await client.DeleteAsync("AVT0i_LdXfxqVSCeV7Aj");
+
+            return true;
+        }
+
+
+
+
+
+
     }
 }
